@@ -89,11 +89,42 @@
 
     <br>
 
+    <div>
+        <label>Vai trò:</label>
+        <br>
+        <select name="roleid" required>
+            <option value="">-- Chọn vai trò --</option>
+            <option value="1" ${param.roleid == '1' ? 'selected' : ''}>
+                Admin (Quản trị viên)
+            </option>
+            <option value="2" ${param.roleid == '2' ? 'selected' : ''}>
+                Manager (Người quản lý)
+            </option>
+            <option value="3" ${param.roleid == '3' ? 'selected' : ''}>
+                User (Người dùng)
+            </option>
+            <option value="4" ${param.roleid == '4' ? 'selected' : ''}>
+                Guest (Khách)
+            </option>
+        </select>
+    </div>
+
+    <br>
+
     <button type="submit">
         Đăng ký
     </button>
 
 </form>
+
+<br>
+
+<p>
+    Đã có tài khoản?
+    <a href="${pageContext.request.contextPath}/login">
+        Đăng nhập
+    </a>
+</p>
 
 </body>
 

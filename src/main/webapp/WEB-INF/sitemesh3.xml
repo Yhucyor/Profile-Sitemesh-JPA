@@ -1,0 +1,15 @@
+<sitemesh>
+
+    <!-- ADMIN phải đặt trước -->
+    <mapping
+            path="/admin/*"
+            name="admin"
+            decorator="admin.jsp"/>
+
+    <!-- Các trang User -->
+    <mapping
+            path="/*"
+            name="web"
+            decorator="web.jsp"/>
+
+</sitemesh>

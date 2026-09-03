@@ -62,16 +62,37 @@ public class RegisterController extends HttpServlet {
         String phone =
                 req.getParameter("phone");
 
+        String roleidParam =
+                req.getParameter("roleid");
+
         // 1. Kiểm tra dữ liệu rỗng
         if (isBlank(email)
                 || isBlank(username)
                 || isBlank(fullname)
                 || isBlank(password)
-                || isBlank(confirmPassword)) {
+                || isBlank(confirmPassword)
+                || isBlank(roleidParam)) {
 
             req.setAttribute(
                     "alert",
                     "Vui lòng nhập đầy đủ thông tin bắt buộc"
+            );
+
+            req.getRequestDispatcher(
+                    "/views/register.jsp"
+            ).forward(req, resp);
+
+            return;
+        }
+
+        // Parse roleid
+        int roleid;
+        try {
+            roleid = Integer.parseInt(roleidParam);
+        } catch (NumberFormatException e) {
+            req.setAttribute(
+                    "alert",
+                    "Vai trò không hợp lệ"
             );
 
             req.getRequestDispatcher(
@@ -155,7 +176,7 @@ public class RegisterController extends HttpServlet {
         user.setPassword(password);
         user.setPhone(phone);
 
-        user.setRoleid(3);
+        user.setRoleid(roleid);
         user.setCreatedDate(LocalDate.now());
 
         // Chưa kích hoạt

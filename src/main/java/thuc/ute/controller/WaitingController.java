@@ -37,8 +37,12 @@ public class WaitingController extends HttpServlet {
         User user =
                 (User) session.getAttribute("account");
 
+        // Phân quyền theo roleid
+        // roleid = 1: Admin
+        // roleid khác: User
         if (user.getRoleid() == 1) {
 
+            // Chuyển đến trang quản trị Admin
             resp.sendRedirect(
                     req.getContextPath()
                             + "/admin/categories"
@@ -46,10 +50,10 @@ public class WaitingController extends HttpServlet {
 
         } else {
 
-            // Tạm thời chưa có trang user riêng
+            // Chuyển đến trang Home cho User
             resp.sendRedirect(
                     req.getContextPath()
-                            + "/admin/categories"
+                            + "/home"
             );
         }
     }
