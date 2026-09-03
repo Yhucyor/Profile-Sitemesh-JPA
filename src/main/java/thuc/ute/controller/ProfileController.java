@@ -16,6 +16,7 @@ import jakarta.servlet.http.Part;
 import thuc.ute.entity.User;
 import thuc.ute.service.IUserService;
 import thuc.ute.service.impl.UserServiceImpl;
+import thuc.ute.utils.ValidationUtils;
 
 @MultipartConfig
 @WebServlet(urlPatterns = {"/profile"})
@@ -128,7 +129,40 @@ public class ProfileController extends HttpServlet {
         String phone =
                 req.getParameter("phone");
 
-        // 5. Cập nhật fullname và phone
+        // 5. Validate fullname
+        if (!ValidationUtils.isBlank(fullname)
+                && !ValidationUtils.isValidFullname(fullname)) {
+
+            req.setAttribute("error",
+                    "Họ tên phải từ 3-100 ký tự"
+            );
+
+            req.setAttribute("user", user);
+
+            req.getRequestDispatcher(
+                    "/views/profile.jsp"
+            ).forward(req, resp);
+
+            return;
+        }
+
+        // 6. Validate phone
+        if (!ValidationUtils.isValidPhone(phone)) {
+
+            req.setAttribute("error",
+                    "Số điện thoại không hợp lệ (phải là 10-11 số, bắt đầu bằng 0)"
+            );
+
+            req.setAttribute("user", user);
+
+            req.getRequestDispatcher(
+                    "/views/profile.jsp"
+            ).forward(req, resp);
+
+            return;
+        }
+
+        // 7. Cập nhật fullname và phone
         if (fullname != null && !fullname.trim().isEmpty()) {
             user.setFullname(fullname.trim());
         }
@@ -137,7 +171,7 @@ public class ProfileController extends HttpServlet {
             user.setPhone(phone.trim());
         }
 
-        // 6. Xử lý upload avatar
+        // 8. Xử lý upload avatar
         try {
 
             Part imagePart =
@@ -149,6 +183,44 @@ public class ProfileController extends HttpServlet {
             if (imagePart != null) {
                 System.out.println("imagePart.getSize(): " + imagePart.getSize());
                 System.out.println("imagePart.getSubmittedFileName(): " + imagePart.getSubmittedFileName());
+                System.out.println("imagePart.getContentType(): " + imagePart.getContentType());
+            }
+
+            // Validate image file type
+            if (imagePart != null
+                    && imagePart.getSize() > 0
+                    && !ValidationUtils.isValidImageFile(imagePart)) {
+
+                req.setAttribute("error",
+                        "Chỉ chấp nhận file ảnh định dạng: JPG, PNG, GIF"
+                );
+
+                req.setAttribute("user", user);
+
+                req.getRequestDispatcher(
+                        "/views/profile.jsp"
+                ).forward(req, resp);
+
+                return;
+            }
+
+            // Validate image file size
+            if (imagePart != null
+                    && imagePart.getSize() > 0
+                    && !ValidationUtils.isValidFileSize(imagePart)) {
+
+                req.setAttribute("error",
+                        "Kích thước file không được vượt quá "
+                                + ValidationUtils.formatFileSize(5 * 1024 * 1024)
+                );
+
+                req.setAttribute("user", user);
+
+                req.getRequestDispatcher(
+                        "/views/profile.jsp"
+                ).forward(req, resp);
+
+                return;
             }
 
             if (imagePart != null
@@ -189,7 +261,7 @@ public class ProfileController extends HttpServlet {
             return;
         }
 
-        // 7. Cập nhật database
+        // 9. Cập nhật database
         try {
 
             userService.update(user);

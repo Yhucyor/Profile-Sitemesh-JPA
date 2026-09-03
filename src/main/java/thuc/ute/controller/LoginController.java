@@ -101,7 +101,7 @@ public class LoginController extends HttpServlet {
                 "text/html; charset=UTF-8"
         );
 
-        // 1. Lấy dữ liệu từ form
+        // 2. Lấy dữ liệu từ form
         String username =
                 req.getParameter("username");
 
@@ -124,7 +124,7 @@ public class LoginController extends HttpServlet {
                         req.getParameter("remember")
                 );
 
-        // 2. Kiểm tra rỗng
+        // 3. Kiểm tra rỗng
         if (isBlank(username)
                 || isBlank(password)) {
 
@@ -140,14 +140,44 @@ public class LoginController extends HttpServlet {
             return;
         }
 
-        // 3. Gọi Service kiểm tra login
+        // 4. Validate username length
+        if (username.trim().length() < 3) {
+
+            req.setAttribute(
+                    "alert",
+                    "Tên đăng nhập phải có ít nhất 3 ký tự"
+            );
+
+            req.getRequestDispatcher(
+                    Constants.LOGIN
+            ).forward(req, resp);
+
+            return;
+        }
+
+        // 5. Validate password length
+        if (password.length() < 6) {
+
+            req.setAttribute(
+                    "alert",
+                    "Mật khẩu phải có ít nhất 6 ký tự"
+            );
+
+            req.getRequestDispatcher(
+                    Constants.LOGIN
+            ).forward(req, resp);
+
+            return;
+        }
+
+        // 6. Gọi Service kiểm tra login
         User user =
                 userService.login(
                         username.trim(),
                         password
                 );
 
-        // 4. Login thành công
+        // 7. Login thành công
         if (user != null) {
 
             HttpSession session =
@@ -173,7 +203,7 @@ public class LoginController extends HttpServlet {
             return;
         }
 
-        // 5. Login thất bại
+        // 8. Login thất bại
         req.setAttribute(
                 "alert",
                 "Tài khoản hoặc mật khẩu không đúng hoặc tài khoản chưa được kích hoạt"
