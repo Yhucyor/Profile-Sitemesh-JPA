@@ -55,6 +55,31 @@ public class ResetPasswordController extends HttpServlet {
             return;
         }
 
+        String email =
+                (String) session.getAttribute(
+                        "forgotEmail"
+                );
+
+        User user =
+                userService.findByEmail(email);
+
+        if (user == null) {
+
+            session.removeAttribute("forgotEmail");
+            session.removeAttribute("resetPasswordAllowed");
+
+            resp.sendRedirect(
+                    req.getContextPath() + "/forgot-password"
+            );
+
+            return;
+        }
+
+        req.setAttribute(
+                "resetUsername",
+                user.getUsername()
+        );
+
         req.getRequestDispatcher(
                 "/views/reset-password.jsp"
         ).forward(req, resp);
@@ -110,6 +135,8 @@ public class ResetPasswordController extends HttpServlet {
                     "Vui lòng nhập đầy đủ mật khẩu"
             );
 
+            setResetUsername(req, session);
+
             req.getRequestDispatcher(
                     "/views/reset-password.jsp"
             ).forward(req, resp);
@@ -123,6 +150,8 @@ public class ResetPasswordController extends HttpServlet {
                     "alert",
                     "Mật khẩu xác nhận không khớp"
             );
+
+            setResetUsername(req, session);
 
             req.getRequestDispatcher(
                     "/views/reset-password.jsp"
@@ -177,5 +206,25 @@ public class ResetPasswordController extends HttpServlet {
     private boolean isBlank(String value) {
         return value == null
                 || value.trim().isEmpty();
+    }
+
+    private void setResetUsername(
+            HttpServletRequest req,
+            HttpSession session) {
+
+        String email =
+                (String) session.getAttribute(
+                        "forgotEmail"
+                );
+
+        User user =
+                userService.findByEmail(email);
+
+        if (user != null) {
+            req.setAttribute(
+                    "resetUsername",
+                    user.getUsername()
+            );
+        }
     }
 }

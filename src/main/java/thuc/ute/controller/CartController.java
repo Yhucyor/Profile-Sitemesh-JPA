@@ -13,8 +13,8 @@ import thuc.ute.entity.Product;
 import thuc.ute.service.IProductService;
 import thuc.ute.service.impl.ProductServiceImpl;
 
-@WebServlet(urlPatterns = {"/home"})
-public class HomeController extends HttpServlet {
+@WebServlet("/cart")
+public class CartController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,16 +27,32 @@ public class HomeController extends HttpServlet {
             HttpServletResponse resp)
             throws ServletException, IOException {
 
-        List<Product> latestProducts =
-                productService.findLatest(10);
+        List<Product> cartProducts =
+                productService.findLatest(2);
+
+        double cartTotal = 0;
+
+        for (Product product : cartProducts) {
+            cartTotal += product.getPrice();
+        }
 
         req.setAttribute(
-                "latestProducts",
-                latestProducts
+                "cartProducts",
+                cartProducts
+        );
+
+        req.setAttribute(
+                "cartTotal",
+                cartTotal
+        );
+
+        req.setAttribute(
+                "breadcrumbTitle",
+                "Cart"
         );
 
         req.getRequestDispatcher(
-                "/views/home.jsp"
+                "/views/cart.jsp"
         ).forward(req, resp);
     }
 }

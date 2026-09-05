@@ -15,46 +15,75 @@
 
 <body>
 
-<h2>Xác nhận OTP</h2>
+<section class="login-section auth-page">
 
-<p>
-    Mã OTP đã được gửi đến email của bạn.
-</p>
+    <div class="container">
 
-<c:if test="${not empty alert}">
-    <p style="color:red;">
-        ${alert}
-    </p>
-</c:if>
+        <div class="login-card auth-card">
 
-<form action="${pageContext.request.contextPath}/forgot-password/verify"
-      method="post">
+            <div class="login-panel auth-visual">
+                <div>
+                    <span>SECURITY CODE</span>
+                    <h2>Verify reset OTP</h2>
+                    <p>
+                        Use the code sent to your email to continue
+                        resetting your TechStore password.
+                    </p>
+                </div>
+            </div>
 
-    <div>
-        <label>Mã OTP:</label>
+            <div class="login-form-panel auth-form-panel">
 
-        <br>
+                <div class="login-form-box auth-form-box">
 
-        <input type="text"
-               name="otp"
-               maxlength="6"
-               placeholder="Nhập mã OTP"
-               required>
+                    <div class="auth-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+
+                    <h1>Confirm OTP</h1>
+
+                    <p class="auth-subtitle">
+                        Mã OTP đã được gửi đến email của bạn.
+                    </p>
+
+                    <c:if test="${not empty alert}">
+                        <div class="login-alert">
+                            ${alert}
+                        </div>
+                    </c:if>
+
+                    <form action="${pageContext.request.contextPath}/forgot-password/verify"
+                          method="post">
+
+                        <div class="login-field otp-field">
+                            <input type="text"
+                                   name="otp"
+                                   maxlength="6"
+                                   placeholder="OTP Code"
+                                   required>
+                        </div>
+
+                        <button type="submit"
+                                class="login-submit-btn">
+                            VERIFY OTP
+                        </button>
+
+                    </form>
+
+                    <a href="${pageContext.request.contextPath}/forgot-password"
+                       class="login-forgot-link">
+                        Back
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <br>
-
-    <button type="submit">
-        Xác nhận OTP
-    </button>
-
-</form>
-
-<br>
-
-<a href="${pageContext.request.contextPath}/forgot-password">
-    Quay lại
-</a>
+</section>
 
 </body>
 

@@ -15,46 +15,75 @@
 
 <body>
 
-<h2>Xác nhận tài khoản</h2>
+<section class="login-section auth-page">
 
-<p>
-    Mã OTP đã được gửi tới email của bạn.
-</p>
+    <div class="container">
 
-<c:if test="${not empty alert}">
-    <p style="color: red;">
-        ${alert}
-    </p>
-</c:if>
+        <div class="login-card auth-card">
 
-<form action="${pageContext.request.contextPath}/verify-otp"
-      method="post">
+            <div class="login-panel auth-visual">
+                <div>
+                    <span>ACCOUNT VERIFY</span>
+                    <h2>Activate your account</h2>
+                    <p>
+                        Enter the OTP code from your email to finish
+                        creating your TechStore account.
+                    </p>
+                </div>
+            </div>
 
-    <div>
-        <label>Mã OTP:</label>
+            <div class="login-form-panel auth-form-panel">
 
-        <br>
+                <div class="login-form-box auth-form-box">
 
-        <input type="text"
-               name="otp"
-               maxlength="6"
-               placeholder="Nhập mã OTP"
-               required>
+                    <div class="auth-icon">
+                        <i class="bi bi-patch-check"></i>
+                    </div>
+
+                    <h1>Verify Account</h1>
+
+                    <p class="auth-subtitle">
+                        Mã OTP đã được gửi tới email của bạn.
+                    </p>
+
+                    <c:if test="${not empty alert}">
+                        <div class="login-alert">
+                            ${alert}
+                        </div>
+                    </c:if>
+
+                    <form action="${pageContext.request.contextPath}/verify-otp"
+                          method="post">
+
+                        <div class="login-field otp-field">
+                            <input type="text"
+                                   name="otp"
+                                   maxlength="6"
+                                   placeholder="OTP Code"
+                                   required>
+                        </div>
+
+                        <button type="submit"
+                                class="login-submit-btn">
+                            CONFIRM
+                        </button>
+
+                    </form>
+
+                    <a href="${pageContext.request.contextPath}/register"
+                       class="login-forgot-link">
+                        Back to register
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <br>
-
-    <button type="submit">
-        Xác nhận
-    </button>
-
-</form>
-
-<br>
-
-<a href="${pageContext.request.contextPath}/register">
-    Quay lại đăng ký
-</a>
+</section>
 
 </body>
 

@@ -2,7 +2,9 @@
         language="java"
         contentType="text/html; charset=UTF-8"
         pageEncoding="UTF-8" %>
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -18,164 +20,182 @@
 
 <body>
 
+<section class="profile-page">
 
-<h1>HỒ SƠ CÁ NHÂN</h1>
+    <div class="container">
 
+        <div class="profile-layout">
 
-<%-- Thông báo thành công --%>
-<c:if test="${not empty success}">
+            <aside class="profile-summary">
 
-    <p style="color: green;">
-        ${success}
-    </p>
+                <div class="profile-avatar-wrap">
 
-</c:if>
+                    <c:choose>
 
+                        <c:when test="${not empty user.avatar}">
 
-<%-- Thông báo lỗi --%>
-<c:if test="${not empty error}">
+                            <c:choose>
+                                <c:when test="${fn:startsWith(user.avatar, 'http://')
+                                        or fn:startsWith(user.avatar, 'https://')}">
+                                    <img src="${user.avatar}"
+                                         alt="Avatar"
+                                         class="profile-avatar">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${pageContext.request.contextPath}/image?fname=${user.avatar}"
+                                         alt="Avatar"
+                                         class="profile-avatar">
+                                </c:otherwise>
+                            </c:choose>
 
-    <p style="color: red;">
-        ${error}
-    </p>
+                        </c:when>
 
-</c:if>
+                        <c:otherwise>
 
+                            <img src="${pageContext.request.contextPath}/assets/frontend/images/avatar/default-avatar.png"
+                                 alt="Default Avatar"
+                                 class="profile-avatar">
 
-<%-- Avatar --%>
-<div>
+                        </c:otherwise>
 
-    <c:choose>
+                    </c:choose>
 
-        <c:when test="${not empty user.avatar}">
+                </div>
 
-            <img
-                    src="${pageContext.request.contextPath}/image?fname=${user.avatar}"
-                    alt="Avatar"
-                    width="150"
-                    height="150"
-                    style="border-radius: 50%; object-fit: cover;">
+                <h2>
+                    <c:choose>
+                        <c:when test="${not empty user.fullname}">
+                            ${user.fullname}
+                        </c:when>
+                        <c:otherwise>
+                            ${user.username}
+                        </c:otherwise>
+                    </c:choose>
+                </h2>
 
-        </c:when>
+                <p>
+                    ${user.email}
+                </p>
 
-        <c:otherwise>
+                <div class="profile-meta-list">
 
-            <img
-                    src="https://via.placeholder.com/150?text=No+Avatar"
-                    alt="Avatar"
-                    width="150"
-                    height="150"
-                    style="border-radius: 50%;">
+                    <div>
+                        <span>Username</span>
+                        <strong>${user.username}</strong>
+                    </div>
 
-        </c:otherwise>
+                    <div>
+                        <span>Phone</span>
+                        <strong>
+                            <c:choose>
+                                <c:when test="${not empty user.phone}">
+                                    ${user.phone}
+                                </c:when>
+                                <c:otherwise>
+                                    Chưa cập nhật
+                                </c:otherwise>
+                            </c:choose>
+                        </strong>
+                    </div>
 
-    </c:choose>
+                </div>
 
-</div>
+            </aside>
 
-<br>
+            <div class="profile-form-card">
 
-<%-- Form cập nhật --%>
-<form
-        method="post"
-        action="${pageContext.request.contextPath}/profile"
-        enctype="multipart/form-data">
+                <div class="profile-form-heading">
 
+                    <span>MY ACCOUNT</span>
 
-    <%-- Username (readonly) --%>
-    <div>
+                    <h1>
+                        Hồ sơ cá nhân
+                    </h1>
 
-        <label>
-            Username
-        </label>
-        <br>
-        <input
-                type="text"
-                value="${user.username}"
-                disabled
-                size="40">
+                    <p>
+                        Cập nhật thông tin cá nhân và ảnh đại diện của bạn.
+                    </p>
+
+                </div>
+
+                <c:if test="${not empty success}">
+                    <div class="profile-alert profile-alert-success">
+                        ${success}
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty error}">
+                    <div class="profile-alert profile-alert-error">
+                        ${error}
+                    </div>
+                </c:if>
+
+                <form
+                        method="post"
+                        action="${pageContext.request.contextPath}/profile"
+                        enctype="multipart/form-data"
+                        class="profile-form">
+
+                    <div class="profile-field-grid">
+
+                        <div class="profile-field">
+                            <label>Username</label>
+                            <input
+                                    type="text"
+                                    value="${user.username}"
+                                    disabled>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Email</label>
+                            <input
+                                    type="email"
+                                    value="${user.email}"
+                                    disabled>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Full name</label>
+                            <input
+                                    type="text"
+                                    name="fullname"
+                                    value="${user.fullname}"
+                                    placeholder="Nhập họ tên đầy đủ">
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Phone</label>
+                            <input
+                                    type="text"
+                                    name="phone"
+                                    value="${user.phone}"
+                                    placeholder="Nhập số điện thoại">
+                        </div>
+
+                    </div>
+
+                    <div class="profile-upload-field">
+                        <label>Ảnh đại diện</label>
+                        <input
+                                type="file"
+                                name="image"
+                                accept="image/*">
+                    </div>
+
+                    <button type="submit"
+                            class="profile-submit-btn">
+                        CẬP NHẬT HỒ SƠ
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <br>
-
-    <%-- Email (readonly) --%>
-    <div>
-
-        <label>
-            Email
-        </label>
-        <br>
-        <input
-                type="email"
-                value="${user.email}"
-                disabled
-                size="40">
-
-    </div>
-
-    <br>
-
-    <%-- Full name (editable) --%>
-    <div>
-
-        <label>
-            Full name
-        </label>
-        <br>
-        <input
-                type="text"
-                name="fullname"
-                value="${user.fullname}"
-                placeholder="Nhập họ tên đầy đủ"
-                size="40">
-
-    </div>
-
-    <br>
-
-    <%-- Phone (editable) --%>
-    <div>
-
-        <label>
-            Phone
-        </label>
-        <br>
-        <input
-                type="text"
-                name="phone"
-                value="${user.phone}"
-                placeholder="Nhập số điện thoại"
-                size="40">
-
-    </div>
-
-    <br>
-
-    <%-- Ảnh đại diện (file upload) --%>
-    <div>
-
-        <label>
-            Ảnh đại diện
-        </label>
-        <br>
-        <input
-                type="file"
-                name="image"
-                accept="image/*">
-
-    </div>
-
-    <br>
-
-    <%-- Submit button --%>
-    <button type="submit">
-        CẬP NHẬT HỒ SƠ
-    </button>
-
-
-</form>
-
+</section>
 
 </body>
 

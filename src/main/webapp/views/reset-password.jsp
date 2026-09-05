@@ -15,44 +15,81 @@
 
 <body>
 
-<h2>Đặt lại mật khẩu</h2>
+<section class="login-section auth-page">
 
-<c:if test="${not empty alert}">
-    <p style="color:red;">
-        ${alert}
-    </p>
-</c:if>
+    <div class="container">
 
-<form action="${pageContext.request.contextPath}/reset-password"
-      method="post">
+        <div class="login-card auth-card">
 
-    <div>
-        <label>Mật khẩu mới:</label>
-        <br>
+            <div class="login-panel auth-visual">
+                <div>
+                    <span>NEW PASSWORD</span>
+                    <h2>Secure your account</h2>
+                    <p>
+                        Create a new password to keep your TechStore
+                        account protected.
+                    </p>
+                </div>
+            </div>
 
-        <input type="password"
-               name="password"
-               required>
+            <div class="login-form-panel auth-form-panel">
+
+                <div class="login-form-box auth-form-box">
+
+                    <div class="auth-icon">
+                        <i class="bi bi-lock"></i>
+                    </div>
+
+                    <c:if test="${not empty resetUsername}">
+                        <div class="reset-account-name">
+                            Username:
+                            <strong>
+                                ${resetUsername}
+                            </strong>
+                        </div>
+                    </c:if>
+
+                    <h1>Reset Password</h1>
+
+                    <c:if test="${not empty alert}">
+                        <div class="login-alert">
+                            ${alert}
+                        </div>
+                    </c:if>
+
+                    <form action="${pageContext.request.contextPath}/reset-password"
+                          method="post">
+
+                        <div class="login-field">
+                            <input type="password"
+                                   name="password"
+                                   placeholder="New Password"
+                                   required>
+                        </div>
+
+                        <div class="login-field">
+                            <input type="password"
+                                   name="confirmPassword"
+                                   placeholder="Confirm Password"
+                                   required>
+                        </div>
+
+                        <button type="submit"
+                                class="login-submit-btn">
+                            CHANGE PASSWORD
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <br>
-
-    <div>
-        <label>Nhập lại mật khẩu:</label>
-        <br>
-
-        <input type="password"
-               name="confirmPassword"
-               required>
-    </div>
-
-    <br>
-
-    <button type="submit">
-        Đổi mật khẩu
-    </button>
-
-</form>
+</section>
 
 </body>
 

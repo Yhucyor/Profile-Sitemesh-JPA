@@ -14,69 +14,96 @@
 
 <body>
 
-<h2>Đăng nhập</h2>
+<section class="login-section">
 
-<c:if test="${not empty alert}">
-    <p style="color: red;">
-        ${alert}
-    </p>
-</c:if>
+    <div class="container">
 
-<form action="${pageContext.request.contextPath}/login"
-      method="post">
+        <div class="login-card">
 
-    <div>
-        <label>Tên đăng nhập:</label>
-        <br>
+            <div class="login-panel">
 
-        <input type="text"
-               name="username"
-               value="${param.username}"
-               required>
+                <div class="login-panel-content">
+
+                    <h2>
+                        New to our website?
+                    </h2>
+
+                    <p>
+                        Create an account to manage your profile,
+                        products and personal information.
+                    </p>
+
+                    <a href="${pageContext.request.contextPath}/register"
+                       class="login-create-btn">
+                        CREATE AN ACCOUNT
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="login-form-panel">
+
+                <div class="login-form-box">
+
+                    <h1>
+                        LOG IN TO ENTER
+                    </h1>
+
+                    <c:if test="${not empty alert}">
+                        <div class="login-alert">
+                            ${alert}
+                        </div>
+                    </c:if>
+
+                    <form action="${pageContext.request.contextPath}/login"
+                          method="post">
+
+                        <div class="login-field">
+                            <input type="text"
+                                   name="username"
+                                   value="${param.username}"
+                                   placeholder="Username"
+                                   required>
+                        </div>
+
+                        <div class="login-field">
+                            <input type="password"
+                                   name="password"
+                                   placeholder="Password"
+                                   required>
+                        </div>
+
+                        <label class="login-remember">
+                            <input type="checkbox"
+                                   name="remember">
+
+                            <span>
+                                Keep me logged in
+                            </span>
+                        </label>
+
+                        <button type="submit"
+                                class="login-submit-btn">
+                            LOG IN
+                        </button>
+
+                    </form>
+
+                    <a href="${pageContext.request.contextPath}/forgot-password"
+                       class="login-forgot-link">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <br>
+</section>
 
-    <div>
-        <label>Mật khẩu:</label>
-        <br>
-
-        <input type="password"
-               name="password"
-               required>
-    </div>
-
-    <br>
-
-    <div>
-        <input type="checkbox"
-               name="remember">
-
-        <label>Ghi nhớ đăng nhập</label>
-    </div>
-
-    <br>
-
-<button type="submit">
-    Đăng nhập
-</button>
-
-</form>
-
-<br>
-
-<p>
-    <a href="${pageContext.request.contextPath}/forgot-password">
-        Quên mật khẩu?
-    </a>
-</p>
-
-<p>
-    Chưa có tài khoản?
-
-    <a href="${pageContext.request.contextPath}/register">
-        Đăng ký
-    </a>
-</p>
 </body>
 </html>

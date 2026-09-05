@@ -3,463 +3,269 @@
          pageEncoding="UTF-8" %>
 
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
-<!DOCTYPE html>
-<html lang="vi">
+<fmt:setLocale value="vi_VN" />
 
-<head>
-    <meta charset="UTF-8">
+<title>Danh sách sản phẩm</title>
 
-    <title>Danh sách sản phẩm</title>
+<section class="catalog-page">
 
-<style>
+    <div class="container">
 
-    * {
-        box-sizing: border-box;
-    }
+        <div class="catalog-layout">
 
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f5f5f5;
-        color: #222;
-    }
+            <aside class="catalog-sidebar">
 
-    .container {
-        width: 96%;
-        max-width: 1100px;
-        margin: 20px auto;
-    }
+                <div class="catalog-widget">
 
-    .page-title {
-        margin-bottom: 8px;
-        font-size: 26px;
-    }
+                    <h3>BROWSE CATEGORIES</h3>
 
-    .product-count {
-        color: #666;
-        margin-bottom: 18px;
-    }
+                    <ul class="catalog-category-list">
+                        <li><a href="${pageContext.request.contextPath}/product">Laptop</a></li>
+                        <li><a href="${pageContext.request.contextPath}/product">Smartphone</a></li>
+                        <li><a href="${pageContext.request.contextPath}/product">Smartwatch</a></li>
+                        <li><a href="${pageContext.request.contextPath}/product">Headphone</a></li>
+                        <li><a href="${pageContext.request.contextPath}/product">Accessories</a></li>
+                    </ul>
 
-    /* =========================
-       GRID
-       ========================= */
+                </div>
 
-    .product-grid {
-        display: grid;
+                <div class="catalog-widget">
 
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+                    <h3>PRODUCT FILTERS</h3>
 
-        gap: 16px;
-    }
+                    <div class="catalog-filter-group">
 
-    /* =========================
-       CARD
-       ========================= */
+                        <h4>Brand</h4>
 
-    .product-card {
-        background: white;
+                        <label><input type="radio" name="brand"> Apple</label>
+                        <label><input type="radio" name="brand"> Asus</label>
+                        <label><input type="radio" name="brand" checked> Samsung</label>
+                        <label><input type="radio" name="brand"> Dell</label>
+                        <label><input type="radio" name="brand"> Lenovo</label>
 
-        border: 1px solid #ddd;
+                    </div>
 
-        border-radius: 10px;
+                    <div class="catalog-filter-group">
 
-        overflow: hidden;
+                        <h4>Color</h4>
 
-        transition: 0.2s;
+                        <label><input type="radio" name="color"> Black</label>
+                        <label><input type="radio" name="color"> White</label>
+                        <label><input type="radio" name="color" checked> Sky blue</label>
+                        <label><input type="radio" name="color"> Silver</label>
+                        <label><input type="radio" name="color"> Gold</label>
 
-        min-width: 0;
-    }
+                    </div>
 
-    .product-card:hover {
-        transform: translateY(-3px);
+                    <div class="catalog-filter-group">
 
-        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.10);
-    }
+                        <h4>Price</h4>
 
-    /* =========================
-       IMAGE
-       ========================= */
+                        <input type="range"
+                               min="10"
+                               max="500"
+                               value="180"
+                               class="catalog-price-range">
 
-    .image-box {
-        width: 100%;
+                        <p class="catalog-price-label">
+                            Price: $10 - $500
+                        </p>
 
-        height: 180px;
+                    </div>
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
+                </div>
 
-        background: #fafafa;
+            </aside>
 
-        overflow: hidden;
-    }
+            <div class="catalog-main">
+
+                <div class="catalog-toolbar">
+
+                    <div class="catalog-toolbar-left">
+
+                        <select aria-label="Default sorting">
+                            <option>Default sorting</option>
+                            <option>Price low to high</option>
+                            <option>Price high to low</option>
+                        </select>
+
+                        <select aria-label="Show products">
+                            <option>Show 6</option>
+                        </select>
+
+                    </div>
+
+                    <c:if test="${totalPages > 1}">
+                        <div class="catalog-pagination catalog-pagination-top">
+                            <c:choose>
+                                <c:when test="${currentPage > 1}">
+                                    <a href="${pageContext.request.contextPath}/product?page=${currentPage - 1}">
+                                        <i class="bi bi-arrow-left"></i>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="disabled"><i class="bi bi-arrow-left"></i></span>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <c:forEach begin="1"
+                                       end="${totalPages}"
+                                       var="pageNumber">
+                                <c:choose>
+                                    <c:when test="${pageNumber == currentPage}">
+                                        <span class="active">${pageNumber}</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/product?page=${pageNumber}">
+                                            ${pageNumber}
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+
+                            <c:choose>
+                                <c:when test="${currentPage < totalPages}">
+                                    <a href="${pageContext.request.contextPath}/product?page=${currentPage + 1}">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="disabled"><i class="bi bi-arrow-right"></i></span>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </c:if>
+
+                </div>
+
+                <c:if test="${empty products}">
+                    <p class="catalog-empty">
+                        Hiện chưa có sản phẩm nào.
+                    </p>
+                </c:if>
+
+                <div class="catalog-grid">
+
+                    <c:forEach items="${products}"
+                               var="product">
+
+                        <div class="catalog-card">
+
+                            <div class="catalog-card-media">
+                                <a href="${pageContext.request.contextPath}/product/detail?id=${product.productId}"
+                                   class="catalog-card-link"
+                                   aria-label="${product.productName}">
+
+                                <c:choose>
+                                    <c:when test="${not empty product.image}">
+                                        <c:choose>
+                                            <c:when test="${fn:startsWith(product.image, 'http://')
+                                                    or fn:startsWith(product.image, 'https://')}">
+                                                <c:set var="imageUrl"
+                                                       value="${product.image}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:set var="imageUrl"
+                                                       value="${pageContext.request.contextPath}/image?fname=${product.image}" />
+                                            </c:otherwise>
+                                        </c:choose>
+
+                                        <img src="${imageUrl}"
+                                             class="catalog-card-image"
+                                             alt="${product.productName}"
+                                             onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/assets/frontend/images/product-default.svg';">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${pageContext.request.contextPath}/assets/frontend/images/product-default.svg"
+                                             class="catalog-card-image"
+                                             alt="Chưa có ảnh">
+                                    </c:otherwise>
+                                </c:choose>
+
+                                </a>
+
+                                <div class="catalog-card-actions">
+                                    <a href="#"
+                                       aria-label="Yêu thích">
+                                        <i class="bi bi-heart"></i>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/cart"
+                                       aria-label="Giỏ hàng">
+                                        <i class="bi bi-cart3"></i>
+                                    </a>
+                                </div>
 
-    .product-image {
-        width: 100%;
-        height: 100%;
-
-        object-fit: contain;
-
-        padding: 8px;
-    }
-
-    .no-image {
-        color: #999;
-        font-size: 14px;
-    }
-
-    /* =========================
-       CONTENT
-       ========================= */
-
-    .product-content {
-        padding: 12px;
-    }
-
-    .product-name {
-        font-size: 17px;
-        font-weight: bold;
-
-        margin-bottom: 8px;
-
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .product-price {
-        color: #ee4d2d;
-
-        font-size: 19px;
-        font-weight: bold;
-
-        margin-bottom: 8px;
-    }
-
-    .product-info {
-        margin-bottom: 5px;
-
-        color: #555;
-
-        font-size: 14px;
-    }
-
-    /* =========================
-       PAGINATION
-       ========================= */
-
-    .pagination {
-        display: flex;
-
-        justify-content: center;
-        align-items: center;
-
-        margin-top: 28px;
-
-        gap: 6px;
-    }
-
-    .pagination a,
-    .pagination span {
-        min-width: 36px;
-        height: 36px;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        border-radius: 5px;
-
-        text-decoration: none;
-
-        color: #555;
-
-        background: white;
-
-        border: 1px solid #ddd;
-    }
-
-    .pagination .active {
-        background: #ee4d2d;
-        color: white;
-        border-color: #ee4d2d;
-    }
-
-    .pagination .disabled {
-        color: #bbb;
-        background: #eee;
-    }
-
-    /* =========================
-       RESPONSIVE
-       ========================= */
-
-    @media (max-width: 900px) {
-
-        .product-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-    }
-
-    @media (max-width: 600px) {
-
-        .container {
-            width: 95%;
-        }
-
-        .product-grid {
-            grid-template-columns: 1fr;
-        }
-
-    }
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-    <!-- =========================
-         TITLE
-         ========================= -->
-
-    <h1 class="page-title">
-        Tất cả sản phẩm
-    </h1>
-
-    <div class="product-count">
-
-        Tổng số sản phẩm:
-        ${totalProducts}
-
-    </div>
-
-
-    <!-- =========================
-         KHÔNG CÓ PRODUCT
-         ========================= -->
-
-    <c:if test="${empty products}">
-
-        <p>
-            Hiện chưa có sản phẩm nào.
-        </p>
-
-    </c:if>
-
-
-    <!-- =========================
-         PRODUCT GRID
-         ========================= -->
-
-    <div class="product-grid">
-
-        <c:forEach items="${products}"
-                   var="product">
-
-            <div class="product-card">
-
-                <!-- IMAGE -->
-
-                <div class="image-box">
-
-                    <c:choose>
-
-                        <c:when test="${not empty product.image}">
-
-                            <img
-                                src="${product.image}"
-                                class="product-image"
-                                alt="${product.productName}"
-                                onerror="this.onerror=null;
-                                         this.src='https://placehold.co/400x300?text=No+Image';"
-                            >
-
-                        </c:when>
-
-                        <c:otherwise>
-
-                            <div class="no-image">
-                                Chưa có ảnh
                             </div>
 
-                        </c:otherwise>
+                            <h3 class="catalog-card-name">
+                                <a href="${pageContext.request.contextPath}/product/detail?id=${product.productId}">
+                                    ${product.productName}
+                                </a>
+                            </h3>
 
-                    </c:choose>
+                            <div class="catalog-card-price">
+                                <fmt:formatNumber
+                                        value="${product.price}"
+                                        type="number"
+                                        groupingUsed="true"
+                                        maxFractionDigits="0" />
+                                ₫
+                            </div>
+
+                        </div>
+
+                    </c:forEach>
 
                 </div>
 
-
-                <!-- CONTENT -->
-
-                <div class="product-content">
-
-                    <div class="product-name">
-
-                        ${product.productName}
-
-                    </div>
-
-
-                    <div class="product-price">
-
-                        ${product.price} VNĐ
-
-                    </div>
-
-
-                    <div class="product-info">
-
-                        Danh mục:
-
-                        <strong>
-                            ${product.category.categoryname}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="product-info">
-
-                        Số lượng:
-
-                        ${product.quantity}
-
-                    </div>
-
-
-                    <div class="product-info">
-
-                        Trạng thái:
-
+                <c:if test="${totalPages > 1}">
+                    <div class="catalog-pagination catalog-pagination-bottom">
                         <c:choose>
-
-                            <c:when test="${product.status == 1}">
-
-                                <span class="status-active">
-                                    Còn bán
-                                </span>
-
+                            <c:when test="${currentPage > 1}">
+                                <a href="${pageContext.request.contextPath}/product?page=${currentPage - 1}">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
                             </c:when>
-
                             <c:otherwise>
-
-                                <span class="status-inactive">
-                                    Ngừng bán
-                                </span>
-
+                                <span class="disabled"><i class="bi bi-chevron-left"></i></span>
                             </c:otherwise>
-
                         </c:choose>
 
-                    </div>
+                        <c:forEach begin="1"
+                                   end="${totalPages}"
+                                   var="pageNumber">
+                            <c:choose>
+                                <c:when test="${pageNumber == currentPage}">
+                                    <span class="active">${pageNumber}</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/product?page=${pageNumber}">
+                                        ${pageNumber}
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
 
-                </div>
+                        <c:choose>
+                            <c:when test="${currentPage < totalPages}">
+                                <a href="${pageContext.request.contextPath}/product?page=${currentPage + 1}">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="disabled"><i class="bi bi-chevron-right"></i></span>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </c:if>
 
             </div>
 
-        </c:forEach>
+        </div>
 
     </div>
 
-
-    <!-- =========================
-         PAGINATION
-         ========================= -->
-
-    <c:if test="${totalPages > 1}">
-
-        <div class="pagination">
-
-
-            <!-- VỀ TRANG ĐẦU -->
-
-            <c:choose>
-
-                <c:when test="${currentPage > 1}">
-
-                    <a href="${pageContext.request.contextPath}/product?page=1">
-                        &laquo;
-                    </a>
-
-                </c:when>
-
-                <c:otherwise>
-
-                    <span class="disabled">
-                        &laquo;
-                    </span>
-
-                </c:otherwise>
-
-            </c:choose>
-
-
-            <!-- SỐ TRANG -->
-
-            <c:forEach begin="1"
-                       end="${totalPages}"
-                       var="pageNumber">
-
-                <c:choose>
-
-                    <c:when test="${pageNumber == currentPage}">
-
-                        <span class="active">
-
-                            ${pageNumber}
-
-                        </span>
-
-                    </c:when>
-
-                    <c:otherwise>
-
-                        <a href="${pageContext.request.contextPath}/product?page=${pageNumber}">
-
-                            ${pageNumber}
-
-                        </a>
-
-                    </c:otherwise>
-
-                </c:choose>
-
-            </c:forEach>
-
-
-            <!-- VỀ TRANG CUỐI -->
-
-            <c:choose>
-
-                <c:when test="${currentPage < totalPages}">
-
-                    <a href="${pageContext.request.contextPath}/product?page=${totalPages}">
-                        &raquo;
-                    </a>
-
-                </c:when>
-
-                <c:otherwise>
-
-                    <span class="disabled">
-                        &raquo;
-                    </span>
-
-                </c:otherwise>
-
-            </c:choose>
-
-        </div>
-
-    </c:if>
-
-</div>
-
-</body>
-
-</html>
+</section>

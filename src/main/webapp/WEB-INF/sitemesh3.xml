@@ -1,5 +1,18 @@
 <sitemesh>
 
+    <!-- Không áp dụng layout cho static assets -->
+    <mapping path="/assets/*" exclude="true"/>
+    <mapping path="/image" exclude="true"/>
+    <mapping path="*.css" exclude="true"/>
+    <mapping path="*.js" exclude="true"/>
+    <mapping path="*.png" exclude="true"/>
+    <mapping path="*.jpg" exclude="true"/>
+    <mapping path="*.jpeg" exclude="true"/>
+    <mapping path="*.gif" exclude="true"/>
+    <mapping path="*.svg" exclude="true"/>
+    <mapping path="*.woff" exclude="true"/>
+    <mapping path="*.woff2" exclude="true"/>
+
     <!-- ADMIN phải đặt trước -->
     <mapping
             path="/admin/*"

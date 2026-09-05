@@ -100,6 +100,11 @@ public class ProductListController extends HttpServlet {
                 totalProducts
         );
 
+        req.setAttribute(
+                "breadcrumbTitle",
+                "Products"
+        );
+
         req.getRequestDispatcher(
                 "/views/product.jsp"
         ).forward(req, resp);
